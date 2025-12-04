@@ -8,7 +8,7 @@ const router = createBrowserRouter([
   {
     path: "/about",
     element: <div>About</div>,
-  },
+  }
 ]);
 
 export default function Routes() {
