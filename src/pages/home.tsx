@@ -6,6 +6,11 @@ import Users from "../components/home/users";
 import Settings from "../components/home/setting";
 import Sidebar from "../components/home/slidebar";
 import Header from "../components/global/header";
+import Martyr from "../components/home/martyr";
+import Campaign from "../components/home/campaign";
+import Empathy from "../components/home/empathy";
+import Blog from "../components/home/blog";
+import Score from "../components/home/score";
 
 
 
@@ -21,11 +26,21 @@ export default function Home() {
         return <Users />;
       case "settings":
         return <Settings />;
+      case "martyrs":
+        return <Martyr />;
+      case "campaigns":
+        return <Campaign />;
+      case "empathies":
+        return <Empathy />;
+      case "blogs":
+        return <Blog />;
+      case "scores":
+        return <Score />;
       default:
         return <Dashboard />;
     }
   };
-
+ 
   return (
     <PageLayout>
       {/* Header */}

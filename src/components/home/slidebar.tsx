@@ -2,7 +2,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setActiveTab } from "../../reducers/panelSlice";
 import type { RootState, AppDispatch } from "../../store/strore";
 
-import { FaTachometerAlt, FaUsers, FaCog } from "react-icons/fa";
+import { FaTachometerAlt, FaUsers, FaCog ,FaNotEqual } from "react-icons/fa";
 
 export default function Sidebar() {
   const dispatch = useDispatch<AppDispatch>();
@@ -10,7 +10,12 @@ export default function Sidebar() {
 
   const tabs = [
     { id: "dashboard", label: "داشبورد", icon: <FaTachometerAlt /> },
+    { id: "martyrs", label: "شهدا", icon: <FaUsers /> },
+    { id: "campaigns", label: "پویش", icon: <FaUsers /> },
+    { id: "empathies", label: "همدلی", icon: <FaUsers /> },
+    { id: "blogs", label: "بلاگ", icon: <FaNotEqual /> },
     { id: "users", label: "کاربران", icon: <FaUsers /> },
+    { id: "scores", label: "امتیازات", icon: <FaNotEqual /> },
     { id: "settings", label: "تنظیمات", icon: <FaCog /> },
   ];
 
