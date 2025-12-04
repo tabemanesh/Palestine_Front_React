@@ -9,21 +9,33 @@ const Score: React.FC = () => {
   const { scores, loading, error } = useSelector((state: RootState) => state.score);
 
   const [form, setForm] = useState<CreateScoreDto>({
-    userId: "",
     activityType: 0,
     campaignId: undefined,
     empathyId: undefined,
     value: 0,
   });
 
+  const [editingId, setEditingId] = useState<string | null>(null);
+
   useEffect(() => {
     dispatch(fetchScores());
   }, [dispatch]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    dispatch(createScore(form));
-    setForm({ userId: "", activityType: 0, campaignId: undefined, empathyId: undefined, value: 0 });
+    await dispatch(createScore(form));
+    dispatch(fetchScores());
+    setForm({ activityType: 0, campaignId: undefined, empathyId: undefined, value: 0 });
+  };
+
+  const handleEdit = (s: ScoreDetailsDto) => {
+    setForm({
+      activityType: s.activityType,
+      campaignId: s.campaignId,
+      empathyId: s.empathyId,
+      value: s.value,
+    });
+    setEditingId(s.id);
   };
 
   const handleDelete = (id: string) => {
@@ -34,102 +46,84 @@ const Score: React.FC = () => {
 
   return (
     <div className="container mx-auto p-6 rtl" dir="rtl">
-      <h1 className="text-3xl font-bold mb-6 text-center text-blue-600">امتیازات کاربران</h1>
 
-      <form onSubmit={handleSubmit} className="bg-gray-50 shadow-md rounded-lg p-6 mb-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="relative">
-            <input
-              type="text"
-              value={form.userId}
-              onChange={(e) => setForm({ ...form, userId: e.target.value })}
-              className="peer border border-gray-300 rounded-md w-full p-3 pt-5 focus:outline-none focus:ring-2 focus:ring-blue-300 bg-gray-100 text-gray-800 transition"
-            />
-            <label className="absolute right-3 top-3 text-gray-500 text-sm transition-all peer-focus:top-1 peer-focus:text-blue-500">
-              شناسه کاربر
-            </label>
-          </div>
+      {/* فرم */}
+      <form onSubmit={handleSubmit} className="bg-gray-50 shadow-md rounded-lg p-6 mb-8 grid grid-cols-1 md:grid-cols-4 gap-4">
+        <input
+          type="number"
+          placeholder="نوع فعالیت"
+          value={form.activityType}
+          onChange={(e) => setForm(prev => ({ ...prev, activityType: parseInt(e.target.value) }))}
+          className="border border-gray-300 rounded-md p-2"
+        />
+        <input
+          type="text"
+          placeholder="شناسه کمپین (اختیاری)"
+          value={form.campaignId || ""}
+          onChange={(e) => setForm(prev => ({ ...prev, campaignId: e.target.value || undefined }))}
+          className="border border-gray-300 rounded-md p-2"
+        />
+        <input
+          type="text"
+          placeholder="شناسه همدلی (اختیاری)"
+          value={form.empathyId || ""}
+          onChange={(e) => setForm(prev => ({ ...prev, empathyId: e.target.value || undefined }))}
+          className="border border-gray-300 rounded-md p-2"
+        />
+        <input
+          type="number"
+          placeholder="مقدار امتیاز"
+          value={form.value}
+          onChange={(e) => setForm(prev => ({ ...prev, value: parseInt(e.target.value) }))}
+          className="border border-gray-300 rounded-md p-2"
+        />
 
-          <div className="relative">
-            <input
-              type="number"
-              value={form.activityType}
-              onChange={(e) => setForm({ ...form, activityType: parseInt(e.target.value) })}
-              className="peer border border-gray-300 rounded-md w-full p-3 pt-5 focus:outline-none focus:ring-2 focus:ring-blue-300 bg-gray-100 text-gray-800 transition"
-            />
-            <label className="absolute right-3 top-3 text-gray-500 text-sm transition-all peer-focus:top-1 peer-focus:text-blue-500">
-              نوع فعالیت
-            </label>
-          </div>
-
-          <div className="relative">
-            <input
-              type="text"
-              value={form.campaignId || ""}
-              onChange={(e) => setForm({ ...form, campaignId: e.target.value })}
-              className="peer border border-gray-300 rounded-md w-full p-3 pt-5 focus:outline-none focus:ring-2 focus:ring-blue-300 bg-gray-100 text-gray-800 transition"
-            />
-            <label className="absolute right-3 top-3 text-gray-500 text-sm transition-all peer-focus:top-1 peer-focus:text-blue-500">
-              شناسه کمپین (اختیاری)
-            </label>
-          </div>
-
-          <div className="relative">
-            <input
-              type="text"
-              value={form.empathyId || ""}
-              onChange={(e) => setForm({ ...form, empathyId: e.target.value })}
-              className="peer border border-gray-300 rounded-md w-full p-3 pt-5 focus:outline-none focus:ring-2 focus:ring-blue-300 bg-gray-100 text-gray-800 transition"
-            />
-            <label className="absolute right-3 top-3 text-gray-500 text-sm transition-all peer-focus:top-1 peer-focus:text-blue-500">
-              شناسه همدلی (اختیاری)
-            </label>
-          </div>
-
-          <div className="relative">
-            <input
-              type="number"
-              value={form.value}
-              onChange={(e) => setForm({ ...form, value: parseInt(e.target.value) })}
-              className="peer border border-gray-300 rounded-md w-full p-3 pt-5 focus:outline-none focus:ring-2 focus:ring-blue-300 bg-gray-100 text-gray-800 transition"
-            />
-            <label className="absolute right-3 top-3 text-gray-500 text-sm transition-all peer-focus:top-1 peer-focus:text-blue-500">
-              مقدار امتیاز
-            </label>
-          </div>
+        <div className="flex gap-2 md:col-span-4">
+          <button type="submit" className="bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-md">
+            {editingId ? "ویرایش" : "ثبت"}
+          </button>
+          <button type="button" onClick={() => { setForm({ activityType: 0, campaignId: undefined, empathyId: undefined, value: 0 }); setEditingId(null); }} className="bg-amber-500 hover:bg-amber-600 text-white py-2 px-4 rounded-md">
+            پاک کردن فرم
+          </button>
         </div>
-
-        <button
-          type="submit"
-          className="mt-4 bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-6 rounded-md transition"
-        >
-          ثبت
-        </button>
       </form>
 
       {loading && <p className="text-center text-gray-500">در حال بارگذاری...</p>}
       {error && <p className="text-center text-red-500">{error}</p>}
 
-      <ul className="space-y-3">
-        {scores.map((s: ScoreDetailsDto) => (
-          <li
-            key={s.id}
-            className="flex justify-between items-center bg-gray-50 p-4 rounded-lg shadow hover:shadow-lg transition"
-          >
-            <div>
-              <strong className="text-blue-600">{s.userFullName || s.userId}</strong> - امتیاز: {s.value} - نوع فعالیت: {s.activityType}
-            </div>
-            <div>
-              <button
-                onClick={() => handleDelete(s.id)}
-                className="bg-red-500 hover:bg-red-600 text-white py-1 px-3 rounded transition"
-              >
-                حذف
-              </button>
-            </div>
-          </li>
-        ))}
-      </ul>
+      {/* جدول */}
+      <div className="overflow-x-auto">
+        <table className="min-w-full border border-gray-300 rounded-xl text-sm">
+          <thead className="bg-gray-100">
+            <tr>
+              <th className="py-2 px-3 text-center border-b border-gray-300">ردیف</th>
+              <th className="py-2 px-3 text-center border-b border-gray-300">نوع فعالیت</th>
+              <th className="py-2 px-3 text-center border-b border-gray-300">کمپین</th>
+              <th className="py-2 px-3 text-center border-b border-gray-300">همدلی</th>
+              <th className="py-2 px-3 text-center border-b border-gray-300">امتیاز</th>
+              <th className="py-2 px-3 text-center border-b border-gray-300">عملیات</th>
+            </tr>
+          </thead>
+          <tbody>
+            {scores.map((s, idx) => (
+              <tr key={s.id} className={`${idx % 2 === 0 ? "bg-white" : "bg-gray-50"} hover:bg-gray-100 transition-colors`}>
+                <td className="py-2 px-3 text-center border-b border-gray-200">{idx + 1}</td>
+                <td className="py-2 px-3 text-center border-b border-gray-200">{s.activityType}</td>
+                <td className="py-2 px-3 text-center border-b border-gray-200">{s.campaignId || "-"}</td>
+                <td className="py-2 px-3 text-center border-b border-gray-200">{s.empathyId || "-"}</td>
+                <td className="py-2 px-3 text-center border-b border-gray-200">{s.value}</td>
+                <td className="py-2 px-3 text-center border-b border-gray-200">
+                  <div className="flex justify-center gap-2">
+                    <button onClick={() => handleEdit(s)} className="bg-yellow-400 hover:bg-yellow-500 text-white py-1 px-2 rounded text-xs">ویرایش</button>
+                    <button onClick={() => handleDelete(s.id)} className="bg-red-500 hover:bg-red-600 text-white py-1 px-2 rounded text-xs">حذف</button>
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
     </div>
   );
 };

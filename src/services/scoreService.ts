@@ -8,7 +8,6 @@ const apiClient: AxiosInstance = axios.create({
 });
 
 export interface CreateScoreDto {
-  userId: string;
   activityType: number;
   campaignId?: string | null;
   empathyId?: string | null;

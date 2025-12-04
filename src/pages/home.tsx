@@ -43,10 +43,7 @@ export default function Home() {
  
   return (
     <PageLayout>
-      {/* Header */}
       <Header />
-
-      {/* Body: Sidebar + Content */}
       <div className="flex w-full h-[calc(100vh-64px)]">
         {sidebarOpen && <Sidebar />}
         <div className="flex-1 p-6">{renderContent()}</div>

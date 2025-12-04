@@ -3,7 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const panelSlice = createSlice({
   name: "panel",
   initialState: {
-    activeTab: "dashboard",
+    activeTab: "martyrs",
   },
   reducers: {
     setActiveTab: (state, action) => {

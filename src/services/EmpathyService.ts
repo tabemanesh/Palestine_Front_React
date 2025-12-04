@@ -12,8 +12,7 @@ export interface CreateEmpathyDto {
   title: string;
   description: string;
   needAmount: number;
-  userCreatedId: string;
-  imageIds?: string[] | null;
+  imgIds?: string[] | null;
 }
 
 export interface UpdateEmpathyDto {
@@ -21,7 +20,7 @@ export interface UpdateEmpathyDto {
   title: string;
   description: string;
   needAmount: number;
-  imageIds?: string[] | null;
+  imgIds?: string[] | null;
 }
 
 export interface EmpathyDetailsDto {

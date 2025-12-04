@@ -119,177 +119,135 @@ const Martyr: React.FC = () => {
   };
 
   return (
-    <div className="container mx-auto p-6 rtl" dir="rtl">
-      <h1 className="text-3xl font-bold mb-6 text-center text-red-600">شهدای مقاومت</h1>
+    <div className="container mx-auto p-4 rtl" dir="rtl">
 
-      <form onSubmit={handleSubmit} className="bg-gray-50 shadow-md rounded-lg p-6 mb-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+  {/* فرم */}
+  <form onSubmit={handleSubmit} className="bg-gray-50 shadow-md rounded-lg p-4 mb-6">
+      <h4 className="text-2xl font-bold mb-4 text-center text-red-600">شهدای مقاومت</h4>
 
-          {/* Name */}
-          <div className="relative">
-            <input
-              type="text"
-              id="name"
-              value={form.name}
-              onChange={(e) => setForm({ ...form, name: e.target.value })}
-              className="peer border border-gray-300 rounded-md w-full p-3 pt-5 focus:outline-none focus:ring-2 focus:ring-blue-300 bg-gray-100 text-gray-800 transition"
-            />
-            <label htmlFor="name" className="absolute right-3 top-3 text-gray-500 text-sm transition-all peer-placeholder-shown:top-5 peer-placeholder-shown:text-gray-400 peer-placeholder-shown:text-base peer-focus:top-1 peer-focus:text-blue-500 peer-focus:text-sm">
-              نام شهید
-            </label>
-          </div>
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+      
+      {/* Name */}
+      <input
+        type="text"
+        placeholder="نام شهید"
+        value={form.name}
+        onChange={(e) => setForm({ ...form, name: e.target.value })}
+        className="border border-gray-300 rounded-md p-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
+      />
 
-          {/* Category */}
-          <div className="relative">
-            <select
-              id="categoryId"
-              value={form.categoryId || ""}
-              onChange={(e) => setForm({ ...form, categoryId: e.target.value })}
-              className="border border-gray-300 rounded-md w-full p-3 focus:outline-none focus:ring-2 focus:ring-blue-300 bg-gray-100 text-gray-800"
-            >
-              <option value="">دسته‌بندی</option>
-              {categories.map((cat) => (
-                <option key={cat.id} value={cat.id}>
-                  {cat.name}
-                </option>
-              ))}
-            </select>
-          </div>
+      {/* Category */}
+      <select
+        value={form.categoryId || ""}
+        onChange={(e) => setForm({ ...form, categoryId: e.target.value })}
+        className="border border-gray-300 rounded-md p-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
+      >
+        <option value="">دسته‌بندی</option>
+        {categories.map((cat) => (
+          <option key={cat.id} value={cat.id}>{cat.name}</option>
+        ))}
+      </select>
 
-          {/* Activities */}
-          <div className="relative">
-            <input
-              type="text"
-              id="activities"
-              value={form.activities}
-              onChange={(e) => setForm({ ...form, activities: e.target.value })}
-              className="peer border border-gray-300 rounded-md w-full p-3 pt-5 focus:outline-none focus:ring-2 focus:ring-blue-300 bg-gray-100 text-gray-800 transition"
-            />
-            <label htmlFor="activities" className="absolute right-3 top-3 text-gray-500 text-sm transition-all peer-placeholder-shown:top-5 peer-placeholder-shown:text-gray-400 peer-placeholder-shown:text-base peer-focus:top-1 peer-focus:text-blue-500 peer-focus:text-sm">
-              فعالیت‌ها
-            </label>
-          </div>
+      {/* Activities */}
+      <input
+        type="text"
+        placeholder="فعالیت‌ها"
+        value={form.activities}
+        onChange={(e) => setForm({ ...form, activities: e.target.value })}
+        className="border border-gray-300 rounded-md p-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
+      />
 
-          {/* History */}
-          <div className="relative md:col-span-2">
-            <textarea
-              id="history"
-              value={form.history}
-              onChange={(e) => setForm({ ...form, history: e.target.value })}
-              className="peer border border-gray-300 rounded-md w-full p-3 pt-5 focus:outline-none focus:ring-2 focus:ring-blue-300 bg-gray-100 text-gray-800 transition h-24"
-            />
-            <label htmlFor="history" className="absolute right-3 top-3 text-gray-500 text-sm transition-all peer-placeholder-shown:top-5 peer-placeholder-shown:text-gray-400 peer-placeholder-shown:text-base peer-focus:top-1 peer-focus:text-blue-500 peer-focus:text-sm">
-              تاریخچه
-            </label>
-          </div>
+      {/* Birth Date */}
+      <input
+        type="text"
+        placeholder="تاریخ تولد"
+        value={form.birthDate || ""}
+        onChange={(e) => setForm({ ...form, birthDate: e.target.value })}
+        className="border border-gray-300 rounded-md p-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
+      />
 
-          {/* Bio */}
-          <div className="relative md:col-span-2">
-            <textarea
-              id="bio"
-              value={form.bio}
-              onChange={(e) => setForm({ ...form, bio: e.target.value })}
-              className="peer border border-gray-300 rounded-md w-full p-3 pt-5 focus:outline-none focus:ring-2 focus:ring-blue-300 bg-gray-100 text-gray-800 transition h-24"
-            />
-            <label htmlFor="bio" className="absolute right-3 top-3 text-gray-500 text-sm transition-all peer-placeholder-shown:top-5 peer-placeholder-shown:text-gray-400 peer-placeholder-shown:text-base peer-focus:top-1 peer-focus:text-blue-500 peer-focus:text-sm">
-              بیوگرافی
-            </label>
-          </div>
+      {/* Martyrdom Date */}
+      <input
+        type="text"
+        placeholder="تاریخ شهادت"
+        value={form.martyrdomDate || ""}
+        onChange={(e) => setForm({ ...form, martyrdomDate: e.target.value })}
+        className="border border-gray-300 rounded-md p-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
+      />
 
-          {/* Birth Date */}
-          <div className="relative">
-            <label htmlFor="birthDate" className="block text-gray-600 mb-2">تاریخ تولد</label>
-            <input
-              type="text"
-              id="birthDate"
-              placeholder="YYYY/MM/DD"
-              value={form.birthDate || ""}
-              onChange={(e) => setForm({ ...form, birthDate: e.target.value })}
-              className="border border-gray-300 rounded-md w-full p-3 focus:outline-none focus:ring-2 focus:ring-blue-300 bg-gray-100 text-gray-800"
-            />
-          </div>
+      {/* Files */}
+      <input
+        type="file"
+        multiple
+        onChange={handleFileChange}
+        className="border border-gray-300 p-2 rounded-md bg-gray-100 text-sm"
+      />
+    </div>
 
-          {/* Martyrdom Date */}
-          <div className="relative">
-            <label htmlFor="martyrdomDate" className="block text-gray-600 mb-2">تاریخ شهادت</label>
-            <input
-              type="text"
-              id="martyrdomDate"
-              placeholder="YYYY/MM/DD"
-              value={form.martyrdomDate || ""}
-              onChange={(e) => setForm({ ...form, martyrdomDate: e.target.value })}
-              className="border border-gray-300 rounded-md w-full p-3 focus:outline-none focus:ring-2 focus:ring-blue-300 bg-gray-100 text-gray-800"
-            />
-          </div>
+    {/* دکمه‌ها */}
+    <div className="mt-3 flex gap-2">
+      <button type="submit" className={`bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-md text-sm`}>
+        {editingId ? "ویرایش" : "ثبت"}
+      </button>
+      <button
+        type="button"
+        onClick={() => {
+          setForm({ name:"", activities:"", history:"", bio:"", imgIds:[], birthDate:undefined, martyrdomDate:undefined, categoryId:undefined });
+          setSelectedFiles([]);
+        }}
+        className="bg-amber-500 hover:bg-amber-600 text-white py-1 px-3 rounded-md text-sm"
+      >
+        پاک کردن فرم
+      </button>
+    </div>
+  </form>
 
-          {/* Images */}
-          <div className="md:col-span-2">
-            <label className="block text-gray-600 mb-2">تصاویر شهید</label>
-            <input
-              type="file"
-              multiple
-              onChange={handleFileChange}
-              className="border border-gray-300 p-2 rounded-md w-full bg-gray-100"
-            />
-            {selectedFiles.length > 0 && (
-              <ul className="mt-2 text-sm text-gray-600">
-                {selectedFiles.map((file, idx) => (
-                  <li key={idx}>{file.name}</li>
-                ))}
-              </ul>
-            )}
-          </div>
-        </div>
-
-        <button
-          type="submit"
-          className={`mt-4 ${editingId ? "bg-blue-500 hover:bg-blue-600" : "bg-green-600 hover:bg-green-700"} text-white font-semibold py-2 px-6 rounded-md transition`}
+  {/* جدول */}
+  <div className="overflow-x-auto">
+  <table className="min-w-full border border-gray-300 rounded-xl text-sm">
+    <thead className="bg-gray-100">
+      <tr>
+        <th className="py-2 px-3 text-center border-b border-gray-300">ردیف</th>
+        <th className="py-2 px-3 text-center border-b border-gray-300">نام</th>
+        <th className="py-2 px-3 text-center border-b border-gray-300">فعالیت‌ها</th>
+        <th className="py-2 px-3 text-center border-b border-gray-300">دسته‌بندی</th>
+        <th className="py-2 px-3 text-center border-b border-gray-300">عملیات</th>
+      </tr>
+    </thead>
+    <tbody>
+      {martyrs.map((m, idx) => (
+        <tr
+          key={m.id}
+          className={`${idx % 2 === 0 ? "bg-white" : "bg-gray-50"} hover:bg-gray-100 transition-colors`}
         >
-          {editingId ? "ویرایش" : "ثبت"}
-        </button>
-
-        <button
-          type="button"
-          onClick={() => {
-            setForm({
-              name: "",
-              activities: "",
-              history: "",
-              bio: "",
-              imgIds: [],
-              birthDate: undefined,
-              martyrdomDate: undefined,
-              categoryId: undefined,
-            });
-            setSelectedFiles([]);
-          }}
-          className="bg-amber-500 hover:bg-amber-600 mr-2 text-white font-semibold py-2 px-6 rounded-md transition"
-        >
-          پاک کردن فرم
-        </button>
-
-      </form>
-
-      {loading && <p className="text-center text-gray-500">در حال بارگذاری...</p>}
-
-      <ul className="space-y-3">
-        {martyrs.map((m: MartyrDto) => (
-          <li key={m.id} className="flex justify-between items-center bg-gray-50 p-4 rounded-lg shadow hover:shadow-lg transition">
-            <div>
-              <strong className="text-blue-600">{m.name}</strong> - {m.activities}
-            </div>
-            <div className="space-x-2">
-              <button onClick={() => handleEdit(m)} className="bg-yellow-400 hover:bg-yellow-500 text-white py-1 px-3 rounded transition">
+          <td className="py-2 px-3 text-center border-b border-gray-200">{idx + 1}</td>
+          <td className="py-2 px-3 text-center border-b border-gray-200">{m.name}</td>
+          <td className="py-2 px-3 text-center border-b border-gray-200">{m.activities}</td>
+          <td className="py-2 px-3 text-center border-b border-gray-200">{m.categoryName}</td>
+          <td className="py-2 px-3 text-center border-b border-gray-200">
+            <div className="flex justify-center gap-2">
+              <button
+                onClick={() => handleEdit(m)}
+                className="bg-yellow-400 hover:bg-yellow-500 text-white py-1 px-2 rounded text-xs transition"
+              >
                 ویرایش
               </button>
-              <button onClick={() => handleDelete(m.id)} className="bg-red-500 hover:bg-red-600 text-white py-1 px-3 rounded transition">
+              <button
+                onClick={() => handleDelete(m.id)}
+                className="bg-red-500 hover:bg-red-600 text-white py-1 px-2 rounded text-xs transition"
+              >
                 حذف
               </button>
             </div>
-          </li>
-        ))}
-      </ul>
-    </div>
+          </td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+</div>
+
+</div>
+
   );
 };
 
