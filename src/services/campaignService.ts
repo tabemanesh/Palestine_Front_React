@@ -12,6 +12,7 @@ export interface CreateCampaignDto {
   title: string;
   description: string;
   regionId: string;
+  imgIds?: string[];
 }
 
 export interface UpdateCampaignDto {
@@ -25,22 +26,25 @@ export interface CampaignDetailsDto {
   id: string;
   title: string;
   description: string;
-  likeCount: number;
-  dislikeCount: number;
+  totalLikeCount: number;
+  totalDislikeCount: number;
+  imgIds?: string[];
+  status: string;
   regionId: string;
   regionName: string;
-  createDate: string;
+
 }
 
 
 const CampaignService = {
   async create(data: CreateCampaignDto): Promise<string> {
+    debugger
     const response = await apiClient.post("Campaign", data);
-    return response.data; // returns id
+    return response.data; 
   },
 
-  async update(id: string, data: UpdateCampaignDto): Promise<void> {
-    const response = await apiClient.put(`Campaign/${id}`, data);
+  async update(data: UpdateCampaignDto): Promise<void> {
+    const response = await apiClient.put(`Campaign/${data.id}`, data);
     return response.data;
   },
 

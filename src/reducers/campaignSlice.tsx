@@ -20,13 +20,30 @@ export const fetchCampaigns = createAsyncThunk("campaign/fetchAll", async () => 
   return data;
 });
 
-export const createCampaign = createAsyncThunk("campaign/create", async (dto: CreateCampaignDto) => {
-  const id = await CampaignService.create(dto);
-  return id;
-});
+export const createCampaign = createAsyncThunk(
+  "campaign/create",
+  async (dto: CreateCampaignDto) => {
+    const id = await CampaignService.create(dto);
+
+    const newCampaign: CampaignDetailsDto = {
+      id,
+      title: dto.title,
+      description: dto.description,
+      regionId: dto.regionId,
+      totalLikeCount: 0,
+      totalDislikeCount: 0,
+
+      // مقادیر پیش‌فرض
+      status: "Active",        
+      regionName: "",          
+    };
+
+    return newCampaign;
+  }
+);
 
 export const updateCampaign = createAsyncThunk("campaign/update", async (dto: UpdateCampaignDto) => {
-  await CampaignService.update(dto.id, dto);
+  await CampaignService.update(dto);
   return dto;
 });
 
@@ -46,12 +63,20 @@ export const campaignSlice = createSlice({
         state.loading = false;
         state.campaigns = action.payload;
       })
-      .addCase(fetchCampaigns.rejected, (state, action) => { state.loading = false; state.error = action.error.message || "خطا در بارگذاری"; })
+      .addCase(fetchCampaigns.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message || "خطا در بارگذاری";
+      })
+
+      .addCase(createCampaign.fulfilled, (state, action: PayloadAction<CampaignDetailsDto>) => {
+        state.campaigns.push(action.payload);
+      })
 
       .addCase(updateCampaign.fulfilled, (state, action: PayloadAction<UpdateCampaignDto>) => {
         const index = state.campaigns.findIndex(c => c.id === action.payload.id);
         if (index >= 0) state.campaigns[index] = { ...state.campaigns[index], ...action.payload };
       })
+
       .addCase(deleteCampaign.fulfilled, (state, action: PayloadAction<string>) => {
         state.campaigns = state.campaigns.filter(c => c.id !== action.payload);
       });
