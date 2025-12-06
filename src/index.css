@@ -3,6 +3,6 @@
 html, body, #root {
   background-color: #eff3f8;
   overflow-x: hidden;
-  overflow-y: hidden;
+  overflow-y: auto;
   
 }

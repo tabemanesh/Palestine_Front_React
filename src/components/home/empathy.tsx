@@ -67,7 +67,7 @@ const Empathy: React.FC = () => {
 
       {/* فرم */}
       <form onSubmit={handleSubmit} className="bg-gray-50 shadow-md rounded-lg p-4 mb-6">
-        <h4 className="text-2xl font-bold mb-4 text-center text-red-600">همدلی‌ها</h4>
+        <h6 className="text-2xl font-bold mb-4 text-center text-red-600">همدلی‌ها</h6>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
           <input

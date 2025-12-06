@@ -70,7 +70,7 @@ const Campaign: React.FC = () => {
 
       {/* فرم */}
       <form onSubmit={handleSubmit} className="bg-gray-50 shadow-md rounded-lg p-4 mb-6">
-        <h4 className="text-2xl font-bold mb-4 text-center text-red-600">پویش‌ها</h4>
+        <h6 className="text-2xl font-bold mb-4 text-center text-red-600">پویش‌ها</h6>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
           <input

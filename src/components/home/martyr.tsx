@@ -29,10 +29,8 @@ const Martyr: React.FC = () => {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
 
-  // بارگذاری اولیه
   useEffect(() => {
     dispatch(fetchMartyrs());
-
     const fetchCategories = async () => {
       try {
         const data = await MartyrCategoryService.getAllCategories();
@@ -44,18 +42,33 @@ const Martyr: React.FC = () => {
     fetchCategories();
   }, [dispatch]);
 
-  // انتخاب فایل‌ها
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
       setSelectedFiles(Array.from(e.target.files));
     }
   };
 
-  // ثبت یا ویرایش
+  // handleEdit امن
+  const handleEdit = (m: MartyrDto) => {
+    setForm({
+      name: m.name || "",
+      activities: m.activities || "",
+      history: m.history || "",
+      bio: m.bio || "",
+      birthDate: m.birthDate || undefined,
+      martyrdomDate: m.martyrdomDate || undefined,
+      categoryId: m.categoryId || undefined,
+      imgIds: m.imgIds ?? undefined, // تصاویر قبلی را نگه دار اگر null باشد
+      id: m.id
+    });
+    setEditingId(m.id);
+    setSelectedFiles([]); // فایل جدید هنوز انتخاب نشده
+  };
+
+  // handleSubmit امن
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // تبدیل تاریخ‌ها از شمسی به میلادی
     const birthDateMiladi = form.birthDate
       ? dayjs(form.birthDate, "YYYY/MM/DD").calendar('gregory').format("YYYY-MM-DD")
       : undefined;
@@ -64,15 +77,19 @@ const Martyr: React.FC = () => {
       ? dayjs(form.martyrdomDate, "YYYY/MM/DD").calendar('gregory').format("YYYY-MM-DD")
       : undefined;
 
-    // آپلود فایل‌ها
-    const uploadedIds: string[] = [...(form.imgIds || [])];
-    for (const file of selectedFiles) {
-      try {
-        const id = await uploadFile(file);
-        uploadedIds.push(id);
-      } catch (err) {
-        console.error("Upload failed:", err);
-        return;
+    // لیست تصاویر: ابتدا تصاویر قبلی را اضافه کن اگر وجود داشته باشد
+    const uploadedIds: string[] = form.imgIds ? [...form.imgIds] : [];
+
+    // فایل‌های جدید را آپلود و اضافه کن
+    if (selectedFiles.length > 0) {
+      for (const file of selectedFiles) {
+        try {
+          const id = await uploadFile(file);
+          uploadedIds.push(id);
+        } catch (err) {
+          console.error("Upload failed:", err);
+          return;
+        }
       }
     }
 
@@ -80,18 +97,18 @@ const Martyr: React.FC = () => {
       ...form,
       birthDate: birthDateMiladi,
       martyrdomDate: martyrdomDateMiladi,
-      imgIds: uploadedIds,
-      id: editingId || undefined
+      imgIds: uploadedIds.length > 0 ? uploadedIds : form.imgIds, // اگر هیچ فایل جدیدی نیست، تصاویر قبلی را نگه دار
+      id: editingId || undefined,
     };
 
     if (editingId) {
-      dispatch(updateMartyr(dto as UpdateMartyrDto));
+      await dispatch(updateMartyr(dto as UpdateMartyrDto));
       setEditingId(null);
     } else {
-      dispatch(createMartyr(dto as CreateMartyrDto));
+      await dispatch(createMartyr(dto as CreateMartyrDto));
     }
 
-    // ریست فرم
+    // ریست فرم و فایل‌های انتخاب شده
     setForm({
       name: "",
       activities: "",
@@ -105,13 +122,8 @@ const Martyr: React.FC = () => {
     setSelectedFiles([]);
   };
 
-  // ویرایش
-  const handleEdit = (m: MartyrDto) => {
-    setForm({ ...m, imgIds: m.imgIds || [] });
-    setEditingId(m.id);
-  };
 
-  // حذف
+
   const handleDelete = (id: string) => {
     if (window.confirm("آیا مطمئن هستید؟")) {
       dispatch(deleteMartyr(id));
@@ -120,134 +132,136 @@ const Martyr: React.FC = () => {
 
   return (
     <div className="container mx-auto p-4 rtl" dir="rtl">
+      {/* فرم */}
+      <form onSubmit={handleSubmit} className="bg-gray-50 shadow-md rounded-lg p-4 mb-6">
+        <h6 className="text-2xl font-bold mb-4 text-center text-red-600">شهدای مقاومت</h6>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <input
+            type="text"
+            placeholder="نام شهید"
+            value={form.name}
+            onChange={(e) => setForm({ ...form, name: e.target.value })}
+            className="border border-gray-300 rounded-md p-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
+          />
+          <select
+            value={form.categoryId || ""}
+            onChange={(e) => setForm({ ...form, categoryId: e.target.value })}
+            className="border border-gray-300 rounded-md p-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
+          >
+            <option value="">دسته‌بندی</option>
+            {categories.map((cat) => (
+              <option key={cat.id} value={cat.id}>{cat.name}</option>
+            ))}
+          </select>
 
-  {/* فرم */}
-  <form onSubmit={handleSubmit} className="bg-gray-50 shadow-md rounded-lg p-4 mb-6">
-      <h4 className="text-2xl font-bold mb-4 text-center text-red-600">شهدای مقاومت</h4>
+          <input
+            type="text"
+            placeholder="فعالیت‌ها"
+            value={form.activities}
+            onChange={(e) => setForm({ ...form, activities: e.target.value })}
+            className="border border-gray-300 rounded-md p-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
+          />
+          <input
+            type="text"
+            placeholder="تاریخ تولد"
+            value={form.birthDate || ""}
+            onChange={(e) => setForm({ ...form, birthDate: e.target.value })}
+            className="border border-gray-300 rounded-md p-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
+          />
 
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-      
-      {/* Name */}
-      <input
-        type="text"
-        placeholder="نام شهید"
-        value={form.name}
-        onChange={(e) => setForm({ ...form, name: e.target.value })}
-        className="border border-gray-300 rounded-md p-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
-      />
+          <input
+            type="text"
+            placeholder="تاریخ شهادت"
+            value={form.martyrdomDate || ""}
+            onChange={(e) => setForm({ ...form, martyrdomDate: e.target.value })}
+            className="border border-gray-300 rounded-md p-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
+          />
 
-      {/* Category */}
-      <select
-        value={form.categoryId || ""}
-        onChange={(e) => setForm({ ...form, categoryId: e.target.value })}
-        className="border border-gray-300 rounded-md p-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
-      >
-        <option value="">دسته‌بندی</option>
-        {categories.map((cat) => (
-          <option key={cat.id} value={cat.id}>{cat.name}</option>
-        ))}
-      </select>
+          {/* History */}
+          <textarea
+            placeholder="تاریخچه"
+            value={form.history}
+            onChange={(e) => setForm({ ...form, history: e.target.value })}
+            className="border border-gray-300 rounded-md p-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300 col-span-1 md:col-span-2"
+          />
 
-      {/* Activities */}
-      <input
-        type="text"
-        placeholder="فعالیت‌ها"
-        value={form.activities}
-        onChange={(e) => setForm({ ...form, activities: e.target.value })}
-        className="border border-gray-300 rounded-md p-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
-      />
+          {/* Bio */}
+          <textarea
+            placeholder="بیوگرافی"
+            value={form.bio}
+            onChange={(e) => setForm({ ...form, bio: e.target.value })}
+            className="border border-gray-300 rounded-md p-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300 col-span-1 md:col-span-2"
+          />
 
-      {/* Birth Date */}
-      <input
-        type="text"
-        placeholder="تاریخ تولد"
-        value={form.birthDate || ""}
-        onChange={(e) => setForm({ ...form, birthDate: e.target.value })}
-        className="border border-gray-300 rounded-md p-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
-      />
+          <input
+            type="file"
+            multiple
+            onChange={handleFileChange}
+            className="border border-gray-300 p-2 rounded-md bg-gray-100 text-sm col-span-1 md:col-span-2"
+          />
+        </div>
 
-      {/* Martyrdom Date */}
-      <input
-        type="text"
-        placeholder="تاریخ شهادت"
-        value={form.martyrdomDate || ""}
-        onChange={(e) => setForm({ ...form, martyrdomDate: e.target.value })}
-        className="border border-gray-300 rounded-md p-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
-      />
+        <div className="mt-3 flex gap-2">
+          <button type="submit" className="bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-md text-sm">
+            {editingId ? "ویرایش" : "ثبت"}
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              setForm({ name: "", activities: "", history: "", bio: "", imgIds: [], birthDate: undefined, martyrdomDate: undefined, categoryId: undefined });
+              setSelectedFiles([]);
+            }}
+            className="bg-amber-500 hover:bg-amber-600 text-white py-1 px-3 rounded-md text-sm"
+          >
+            پاک کردن فرم
+          </button>
+        </div>
+      </form>
 
-      {/* Files */}
-      <input
-        type="file"
-        multiple
-        onChange={handleFileChange}
-        className="border border-gray-300 p-2 rounded-md bg-gray-100 text-sm"
-      />
-    </div>
-
-    {/* دکمه‌ها */}
-    <div className="mt-3 flex gap-2">
-      <button type="submit" className={`bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-md text-sm`}>
-        {editingId ? "ویرایش" : "ثبت"}
-      </button>
-      <button
-        type="button"
-        onClick={() => {
-          setForm({ name:"", activities:"", history:"", bio:"", imgIds:[], birthDate:undefined, martyrdomDate:undefined, categoryId:undefined });
-          setSelectedFiles([]);
-        }}
-        className="bg-amber-500 hover:bg-amber-600 text-white py-1 px-3 rounded-md text-sm"
-      >
-        پاک کردن فرم
-      </button>
-    </div>
-  </form>
-
-  {/* جدول */}
-  <div className="overflow-x-auto">
-  <table className="min-w-full border border-gray-300 rounded-xl text-sm">
-    <thead className="bg-gray-100">
-      <tr>
-        <th className="py-2 px-3 text-center border-b border-gray-300">ردیف</th>
-        <th className="py-2 px-3 text-center border-b border-gray-300">نام</th>
-        <th className="py-2 px-3 text-center border-b border-gray-300">فعالیت‌ها</th>
-        <th className="py-2 px-3 text-center border-b border-gray-300">دسته‌بندی</th>
-        <th className="py-2 px-3 text-center border-b border-gray-300">عملیات</th>
-      </tr>
-    </thead>
-    <tbody>
-      {martyrs.map((m, idx) => (
-        <tr
-          key={m.id}
-          className={`${idx % 2 === 0 ? "bg-white" : "bg-gray-50"} hover:bg-gray-100 transition-colors`}
-        >
-          <td className="py-2 px-3 text-center border-b border-gray-200">{idx + 1}</td>
-          <td className="py-2 px-3 text-center border-b border-gray-200">{m.name}</td>
-          <td className="py-2 px-3 text-center border-b border-gray-200">{m.activities}</td>
-          <td className="py-2 px-3 text-center border-b border-gray-200">{m.categoryName}</td>
-          <td className="py-2 px-3 text-center border-b border-gray-200">
-            <div className="flex justify-center gap-2">
-              <button
-                onClick={() => handleEdit(m)}
-                className="bg-yellow-400 hover:bg-yellow-500 text-white py-1 px-2 rounded text-xs transition"
+      {/* جدول */}
+      <div className="overflow-x-auto">
+        <table className="min-w-full border border-gray-300 rounded-xl text-sm">
+          <thead className="bg-gray-100">
+            <tr>
+              <th className="py-2 px-3 text-center border-b border-gray-300">ردیف</th>
+              <th className="py-2 px-3 text-center border-b border-gray-300">نام</th>
+              <th className="py-2 px-3 text-center border-b border-gray-300">فعالیت‌ها</th>
+              <th className="py-2 px-3 text-center border-b border-gray-300">دسته‌بندی</th>
+              <th className="py-2 px-3 text-center border-b border-gray-300">عملیات</th>
+            </tr>
+          </thead>
+          <tbody>
+            {martyrs.map((m, idx) => (
+              <tr
+                key={m.id}
+                className={`${idx % 2 === 0 ? "bg-white" : "bg-gray-50"} hover:bg-gray-100 transition-colors`}
               >
-                ویرایش
-              </button>
-              <button
-                onClick={() => handleDelete(m.id)}
-                className="bg-red-500 hover:bg-red-600 text-white py-1 px-2 rounded text-xs transition"
-              >
-                حذف
-              </button>
-            </div>
-          </td>
-        </tr>
-      ))}
-    </tbody>
-  </table>
-</div>
-
-</div>
-
+                <td className="py-2 px-3 text-center border-b border-gray-200">{idx + 1}</td>
+                <td className="py-2 px-3 text-center border-b border-gray-200">{m.name}</td>
+                <td className="py-2 px-3 text-center border-b border-gray-200">{m.activities}</td>
+                <td className="py-2 px-3 text-center border-b border-gray-200">{m.categoryName}</td>
+                <td className="py-2 px-3 text-center border-b border-gray-200">
+                  <div className="flex justify-center gap-2">
+                    <button
+                      onClick={() => handleEdit(m)}
+                      className="bg-yellow-400 hover:bg-yellow-500 text-white py-1 px-2 rounded text-xs transition"
+                    >
+                      ویرایش
+                    </button>
+                    <button
+                      onClick={() => handleDelete(m.id)}
+                      className="bg-red-500 hover:bg-red-600 text-white py-1 px-2 rounded text-xs transition"
+                    >
+                      حذف
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
   );
 };
 

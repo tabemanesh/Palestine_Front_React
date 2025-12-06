@@ -48,6 +48,8 @@ const Score: React.FC = () => {
     <div className="container mx-auto p-6 rtl" dir="rtl">
 
       {/* فرم */}
+      <h6 className="text-2xl font-bold mb-4 text-center text-red-600">امتیازات</h6>
+
       <form onSubmit={handleSubmit} className="bg-gray-50 shadow-md rounded-lg p-6 mb-8 grid grid-cols-1 md:grid-cols-4 gap-4">
         <input
           type="number"
