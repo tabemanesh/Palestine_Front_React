@@ -137,7 +137,7 @@ const Blog: React.FC = () => {
               <th className="py-2 px-3 text-center border-b border-gray-300">عنوان</th>
               <th className="py-2 px-3 text-center border-b border-gray-300">نویسنده</th>
               <th className="py-2 px-3 text-center border-b border-gray-300">دسته‌بندی</th>
-              <th className="py-2 px-3 text-center border-b border-gray-300">تصویر</th>
+              {/* <th className="py-2 px-3 text-center border-b border-gray-300">تصویر</th> */}
               <th className="py-2 px-3 text-center border-b border-gray-300">عملیات</th>
             </tr>
           </thead>
@@ -148,9 +148,9 @@ const Blog: React.FC = () => {
                 <td className="py-2 px-3 text-center border-b border-gray-200">{b.title}</td>
                 <td className="py-2 px-3 text-center border-b border-gray-200">{b.author || "بدون نویسنده"}</td>
                 <td className="py-2 px-3 text-center border-b border-gray-200">{categories.find(c => c.id === b.blogCategoryId)?.faName || ""}</td>
-                <td className="py-2 px-3 text-center border-b border-gray-200">
+                {/* <td className="py-2 px-3 text-center border-b border-gray-200">
                   {b.imgId && <img src={`/files/${b.imgId}`} alt="blog" className="w-16 h-16 rounded mx-auto" />}
-                </td>
+                </td> */}
                 <td className="py-2 px-3 text-center border-b border-gray-200">
                   <div className="flex justify-center gap-2">
                     <button onClick={() => handleEdit(b)} className="bg-yellow-400 hover:bg-yellow-500 text-white py-1 px-2 rounded text-xs">ویرایش</button>

@@ -128,7 +128,7 @@ const Empathy: React.FC = () => {
               <th className="py-2 px-3 text-center border-b border-gray-300">عنوان</th>
               <th className="py-2 px-3 text-center border-b border-gray-300">توضیحات</th>
               <th className="py-2 px-3 text-center border-b border-gray-300">مقدار نیاز</th>
-              <th className="py-2 px-3 text-center border-b border-gray-300">تصاویر</th>
+              {/* <th className="py-2 px-3 text-center border-b border-gray-300">تصاویر</th> */}
               <th className="py-2 px-3 text-center border-b border-gray-300">عملیات</th>
             </tr>
           </thead>
@@ -139,11 +139,11 @@ const Empathy: React.FC = () => {
                 <td className="py-2 px-3 text-center border-b border-gray-200">{e.title}</td>
                 <td className="py-2 px-3 text-center border-b border-gray-200">{e.description}</td>
                 <td className="py-2 px-3 text-center border-b border-gray-200">{e.needAmount}</td>
-                <td className="py-2 px-3 text-center border-b border-gray-200 flex justify-center gap-2 flex-wrap">
-                  {e.imageIds?.map(imgId => (
+               {/* <td className="py-2 px-3 text-center border-b border-gray-200 flex justify-center gap-2 flex-wrap">
+                   {e.imageIds?.map(imgId => (
                     <img key={imgId} src={`/files/${imgId}`} alt="emp" className="w-16 h-16 rounded" />
                   ))}
-                </td>
+                </td> */}
                 <td className="py-2 px-3 text-center border-b border-gray-200">
                   <div className="flex justify-center gap-2">
                     <button onClick={() => handleEdit(e)} className="bg-yellow-400 hover:bg-yellow-500 text-white py-1 px-2 rounded text-xs transition">ویرایش</button>
