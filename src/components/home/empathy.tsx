@@ -25,33 +25,34 @@ const Empathy: React.FC = () => {
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    const uploadedIds: string[] = [...(form.imgIds || [])];
-    for (const file of selectedFiles) {
-      try {
-        const id = await uploadFile(file);
-        uploadedIds.push(id);
-      } catch (err) {
-        console.error("Upload failed:", err);
-      }
-    }
+  e.preventDefault();
 
-    const dto: CreateEmpathyDto | UpdateEmpathyDto = {
-      ...form,
-      imgIds: uploadedIds,
-      id: editingId || undefined,
-    };
+  let imgIds = Array.isArray(form.imgIds) ? [...form.imgIds] : [];
 
-    if (editingId) {
-      dispatch(updateEmpathy(dto as UpdateEmpathyDto));
-      setEditingId(null);
-    } else {
-      dispatch(createEmpathy(dto as CreateEmpathyDto));
-    }
+  for (const file of selectedFiles) {
+    const id = await uploadFile(file);
+    imgIds.push(id);
+  }
 
-    setForm({ title: "", description: "", needAmount: 0, imgIds: [] });
-    setSelectedFiles([]);
+  const dto: any = {
+    ...form,
+    imageIds: imgIds, // یا imgIds
   };
+
+  if (editingId) {
+    dto.id = editingId;
+    dispatch(updateEmpathy(dto));
+    setEditingId(null);
+  } else {
+    dispatch(createEmpathy(dto));
+  }
+
+  setForm({ title: "", description: "", needAmount: 0, imgIds: [] });
+  setSelectedFiles([]);
+};
+
+
+
 
   const handleEdit = (e: EmpathyDetailsDto) => {
     setForm({ title: e.title, description: e.description, needAmount: e.needAmount, imgIds: e.imageIds || [] });
@@ -93,7 +94,6 @@ const Empathy: React.FC = () => {
             className="border border-gray-300 rounded-md p-2 text-sm md:col-span-3"
           />
 
-          {/* آپلود تصاویر */}
           <input
             type="file"
             multiple
@@ -119,7 +119,6 @@ const Empathy: React.FC = () => {
       {loading && <p className="text-center text-gray-500">در حال بارگذاری...</p>}
       {error && <p className="text-center text-red-500">{error}</p>}
 
-      {/* جدول */}
       <div className="overflow-x-auto">
         <table className="min-w-full border border-gray-300 rounded-xl text-sm">
           <thead className="bg-gray-100">
@@ -128,7 +127,6 @@ const Empathy: React.FC = () => {
               <th className="py-2 px-3 text-center border-b border-gray-300">عنوان</th>
               <th className="py-2 px-3 text-center border-b border-gray-300">توضیحات</th>
               <th className="py-2 px-3 text-center border-b border-gray-300">مقدار نیاز</th>
-              {/* <th className="py-2 px-3 text-center border-b border-gray-300">تصاویر</th> */}
               <th className="py-2 px-3 text-center border-b border-gray-300">عملیات</th>
             </tr>
           </thead>
@@ -138,12 +136,7 @@ const Empathy: React.FC = () => {
                 <td className="py-2 px-3 text-center border-b border-gray-200">{idx + 1}</td>
                 <td className="py-2 px-3 text-center border-b border-gray-200">{e.title}</td>
                 <td className="py-2 px-3 text-center border-b border-gray-200">{e.description}</td>
-                <td className="py-2 px-3 text-center border-b border-gray-200">{e.needAmount}</td>
-               {/* <td className="py-2 px-3 text-center border-b border-gray-200 flex justify-center gap-2 flex-wrap">
-                   {e.imageIds?.map(imgId => (
-                    <img key={imgId} src={`/files/${imgId}`} alt="emp" className="w-16 h-16 rounded" />
-                  ))}
-                </td> */}
+                <td className="py-2 px-3 text-center border-b border-gray-200">{e.needAmount}</td>       
                 <td className="py-2 px-3 text-center border-b border-gray-200">
                   <div className="flex justify-center gap-2">
                     <button onClick={() => handleEdit(e)} className="bg-yellow-400 hover:bg-yellow-500 text-white py-1 px-2 rounded text-xs transition">ویرایش</button>
