@@ -18,6 +18,8 @@ export default function Sidebar() {
     { id: "blogs", label: "بلاگ", icon: <MdNoteAlt /> },
     { id: "scores", label: "امتیازات", icon: <IoStar /> },
     { id: "users", label: "کاربران", icon: <FaUsers /> },
+    { id: "questions", label: "پرسش و پاسخ", icon: <FaUsers /> },
+    
   ];
 
   return (

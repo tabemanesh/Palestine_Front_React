@@ -7,6 +7,8 @@ import empathyReducer from "../reducers/empathySlice";
 import blogReducer from "../reducers/blogSlice";
 import scoreReducer from "../reducers/scoreSlice";
 import userReducer from "../reducers/userSlice";
+import questionReducer from "../reducers/questionSlice";
+
 export const store = configureStore({
   reducer: {
    panel: panelReducer,
@@ -16,7 +18,8 @@ export const store = configureStore({
    empathy : empathyReducer,
    blog : blogReducer,
    score : scoreReducer,
-   user : userReducer
+   user : userReducer,
+   questions : questionReducer
 
   },
 });
