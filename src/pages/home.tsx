@@ -12,6 +12,7 @@ import Empathy from "../components/home/empathy";
 import Blog from "../components/home/blog";
 import Score from "../components/home/score";
 import QuestionAdminPanel from "../components/home/questio";
+import Challenge from "../components/home/challeng";
 
 
 
@@ -39,6 +40,8 @@ export default function Home() {
         return <Score />;
       case "questions":
         return <QuestionAdminPanel />;
+      case "challenges":
+        return <Challenge />;  
       default:
         return <Dashboard />;
     }

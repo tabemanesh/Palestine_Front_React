@@ -8,6 +8,7 @@ import blogReducer from "../reducers/blogSlice";
 import scoreReducer from "../reducers/scoreSlice";
 import userReducer from "../reducers/userSlice";
 import questionReducer from "../reducers/questionSlice";
+import challengesReducer from "../reducers/challengeSlice";
 
 export const store = configureStore({
   reducer: {
@@ -19,7 +20,8 @@ export const store = configureStore({
    blog : blogReducer,
    score : scoreReducer,
    user : userReducer,
-   questions : questionReducer
+   questions : questionReducer,
+   challenge : challengesReducer
 
   },
 });

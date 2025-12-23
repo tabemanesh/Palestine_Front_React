@@ -2,7 +2,7 @@
  * تنظیمات API با پشتیبانی از Environment Variables
  */
 export const API_CONFIG = {
-  BASE_URL: import.meta.env.VITE_API_BASE_URL || 'https://localhost:7000/api/v1/',
+  BASE_URL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:5001/api/v1/',
   TIMEOUT: 1200000,
   HEADERS: {
     'Content-Type': 'application/json',

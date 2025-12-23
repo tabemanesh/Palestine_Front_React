@@ -16,6 +16,7 @@ export default function Sidebar() {
     { id: "campaigns", label: "پویش", icon: <MdCampaign /> },
     { id: "empathies", label: "همدلی", icon: <GiLovers /> },
     { id: "blogs", label: "بلاگ", icon: <MdNoteAlt /> },
+    { id: "challenges", label: "چالش ها", icon: <FaUsers /> },
     { id: "scores", label: "امتیازات", icon: <IoStar /> },
     { id: "users", label: "کاربران", icon: <FaUsers /> },
     { id: "questions", label: "پرسش و پاسخ", icon: <FaUsers /> },
