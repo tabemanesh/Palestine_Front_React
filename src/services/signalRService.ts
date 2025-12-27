@@ -10,7 +10,7 @@ class SignalRService {
     try {
       if (!this.connection) {
         this.connection = new signalR.HubConnectionBuilder()
-          .withUrl("https://localhost:7000/questionHub")
+          .withUrl("http://localhost:5001/questionHub")
           .withAutomaticReconnect()
           .build();
       }
@@ -43,7 +43,7 @@ class SignalRService {
 
   async fetchAllQuestions() {
     try {
-      const res = await axios.get('https://localhost:7000/api/v1/Questions/GetAllQuestions');
+      const res = await axios.get('http://localhost:5001/api/v1/Questions/GetAllQuestions');
       return res.data; 
     } catch (error) {
       console.error("Error fetching questions:", error);

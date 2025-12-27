@@ -12,7 +12,7 @@ export default function Sidebar() {
   const activeTab = useSelector((state: RootState) => state.panel.activeTab);
 
   const tabs = [
-    { id: "martyrs", label: "شهدا", icon: <IoPeople /> },
+    { id: "martyrs", label: "قهرمانان", icon: <IoPeople /> },
     { id: "campaigns", label: "پویش", icon: <MdCampaign /> },
     { id: "empathies", label: "همدلی", icon: <GiLovers /> },
     { id: "blogs", label: "بلاگ", icon: <MdNoteAlt /> },

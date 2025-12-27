@@ -1,15 +1,7 @@
-import type { AxiosInstance } from "axios";
-import axios from "axios";
-import { API_CONFIG } from "./configuration/configApi";
+import apiClient from "../utilz/apiClient";
 
-// ساخت axios client
-const apiClient: AxiosInstance = axios.create({
-  baseURL: API_CONFIG.BASE_URL,
-  timeout: API_CONFIG.TIMEOUT,
-  headers: API_CONFIG.HEADERS,
-});
 
-// ---------------- DTO ها مطابق .NET ----------------
+
 
 export interface CreateChallengeDto {
   title: string;
@@ -26,7 +18,6 @@ export interface ChallengeDto {
   description: string;
 }
 
-// ---------------- Service ----------------
 
 const ChallengeService = {
   async create(data: CreateChallengeDto): Promise<string> {

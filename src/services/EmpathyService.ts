@@ -1,11 +1,6 @@
-import axios, { type AxiosInstance } from "axios";
-import { API_CONFIG } from "./configuration/configApi";
+import apiClient from "../utilz/apiClient";
 
-const apiClient: AxiosInstance = axios.create({
-  baseURL: API_CONFIG.BASE_URL,
-  timeout: API_CONFIG.TIMEOUT,
-  headers: API_CONFIG.HEADERS,
-});
+
 
 
 export interface CreateEmpathyDto {

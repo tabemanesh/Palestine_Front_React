@@ -134,11 +134,11 @@ const Martyr: React.FC = () => {
     <div className="container mx-auto p-4 rtl" dir="rtl">
       {/* فرم */}
       <form onSubmit={handleSubmit} className="bg-gray-50 shadow-md rounded-lg p-4 mb-6">
-        <h6 className="text-2xl font-bold mb-4 text-center text-red-600">شهدای مقاومت</h6>
+        <h6 className="text-2xl font-bold mb-4 text-center text-red-600">قهرمانان</h6>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
           <input
             type="text"
-            placeholder="نام شهید"
+            placeholder="نام قهرمان"
             value={form.name}
             onChange={(e) => setForm({ ...form, name: e.target.value })}
             className="border border-gray-300 rounded-md p-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300"

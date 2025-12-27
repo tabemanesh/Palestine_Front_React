@@ -1,15 +1,8 @@
-import type { AxiosInstance } from "axios";
-import axios from "axios";
-import { API_CONFIG } from "./configuration/configApi";
+import apiClient from "../utilz/apiClient";
 
-// ساخت axios client
-const apiClient: AxiosInstance = axios.create({
-  baseURL: API_CONFIG.BASE_URL,
-  timeout: API_CONFIG.TIMEOUT,
-  headers: API_CONFIG.HEADERS,
-});
 
-// ---------------- DTO ها مطابق .NET ----------------
+
+
 
 export interface CreateMartyrDto {
   name: string;
